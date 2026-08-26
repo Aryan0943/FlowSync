@@ -1,11 +1,12 @@
 const router=require('express').Router();
 // const Employee=require('../models/Employee.js');
 const {createEmployee,getAllEmployees,getEmployeeById,updateEmployee,deleteEmployee}=require('../controller/employeeController.js');
+const authMiddleware=require('../middleware/authMiddleware.js');
+const roleMiddleware=require('../middleware/roleMiddleware.js');
 
-
-router.post('/employees',createEmployee);
-router.get('/employees',getAllEmployees);
-router.get('/employees/:id',getEmployeeById);
-router.put('/employees/:id',updateEmployee);
-router.delete('/employees/:id',deleteEmployee);
+router.post('/employees',authMiddleware,roleMiddleware(['admin']),createEmployee);
+router.get('/employees',authMiddleware,getAllEmployees);
+router.get('/employees/:id',authMiddleware,getEmployeeById);
+router.put('/employees/:id',authMiddleware,roleMiddleware(['admin']),updateEmployee);
+router.delete('/employees/:id',authMiddleware,roleMiddleware(['admin']),deleteEmployee);
 module.exports=router;
